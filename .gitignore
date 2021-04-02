@@ -1,2 +1,5 @@
 .vscode/launch.json
 DatabaseConfig.py
+back/node_modules
+back/private.js
+Secuerity.js
