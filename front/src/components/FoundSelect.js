@@ -1,7 +1,7 @@
 import { Button, ButtonGroup, FormControl, InputLabel, makeStyles, MenuItem, Paper, Select } from '@material-ui/core'
 import { Skeleton } from '@material-ui/lab';
 import React, { useContext, useEffect, useState } from 'react'
-import { theme } from '../GlobalStatic';
+import { decrypt, theme } from '../GlobalStatic';
 import { FundContext } from './Dashbord';
 import { UserContext } from './Father';
 
@@ -12,10 +12,11 @@ export default function FundSelect() {
     const [Funds, setFunds] = useState([]);
     const load = () => {
         let a = [];
-        a.push({name: 'הכל' ,value : -1});
-        a.push({name: 'קופה כללית' ,value : 0});
+        a.push({name: 'הכל' ,_id : -1});
+        a.push({name: 'קופה כללית' ,_id : UserData.funds[0]._id});
         for (let i = 1; i < UserData.funds.length; i++) {
-            a.push({name : UserData.funds[i].name, value : i})
+            console.log();
+            a.push({_id : UserData.funds[i]._id,name : decrypt(UserData.funds[i].name)})
         }
         setFunds(a);
     }
@@ -33,7 +34,7 @@ export default function FundSelect() {
                     value={Fund}
                     labelId='fund-select'>
                             {
-                                Funds.map(e => <MenuItem key={e.value} value={e.value}>{e.name}</MenuItem>)
+                                Funds.map(e => <MenuItem key={e._id} value={e._id}>{e.name}</MenuItem>)
                             }
                     </Select>
             </FormControl>

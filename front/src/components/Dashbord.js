@@ -8,18 +8,23 @@ import Overview, { OverviewSkeleton } from './Overview';
 import OpenFund from './OpenFund'
 import PushMovement from './PushMovement';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
+import Movements from './Movements';
 
 export const FundContext = createContext(0);
 
 export default function Dashbord() {
-    const [Fund, setFund] = useState(0);
+    const [Fund, setFund] = useState(-1);
+    const [UD , setUD] = useState();
     const [OFShow , setOFShow] = useState(false)
     const classes = useStyle(theme);
     const {UserData,setUserData} = (useContext(UserContext));
     useEffect(async() => {
-        setUserData(await (await axios.get(ServerURL + `users/get/?_id=${sessionStorage.getItem('id') || localStorage.getItem('id')}`)).data)
+        let data = await (await axios.get(ServerURL + `users/get/?_id=${sessionStorage.getItem('id') || localStorage.getItem('id')}`)).data;
+        setUserData(data);
         console.log("hello load");
-    }, [,UserData])
+        setUD(data);
+    }, [,Fund])
+
     window.addEventListener('beforeunload', async(e) => {
         e.preventDefault();
         logOut();
@@ -42,20 +47,20 @@ export default function Dashbord() {
                         {UserData === null ? <FundSelectSkeleton/> : <FoundSelect/>}
                         <IconButton onClick={e => {setOFShow(true)}}><AddCircleIcon color='secondary' fontSize='large' /></IconButton>
                     </div>
-                    <Button variant='outlined' color='inherit' onClick={logOut()}>התנתק</Button>
+                    <Button color='inherit' onClick={logOut()} style={{width : '100px'}} >התנתק</Button>
                 </Toolbar>
             </AppBar>
                 <Grid container spacing={1} className={classes.grid_container}>
-                    <Grid item xs={12} md={3}>
-                        {UserData === null ? <OverviewSkeleton/> : <Overview/>}
+                    <Grid container item xs={12} md={4} spacing={1} alignContent='flex-start'>
+                        <Grid item xs={12}>
+                        {UserData === null ? undefined : <PushMovement/>}
+                        </Grid>
+                        <Grid item xs={12}>
+                            {UserData === null ? <OverviewSkeleton/> : <Overview/>}
+                        </Grid>
                     </Grid>
-                    <Grid container item xs={12} md={9} spacing={1}>
-                        <Grid item xs={12}>
-                            <PushMovement/>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <Paper elevation={2}>hello 5</Paper>
-                        </Grid>
+                    <Grid item xs={12} md={8}>
+                        {UserData === null ? undefined : <Movements />}
                     </Grid>
                 </Grid>
             </FundContext.Provider>

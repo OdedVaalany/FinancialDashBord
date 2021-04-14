@@ -21,7 +21,7 @@ Route.post('/', async(req,res) => {
         res.json(x);
     } catch (error){
         res.send(false);
-        throw error
+        console.log(error);
     }
 })
 
@@ -31,42 +31,70 @@ Route.get('/get/?', async(req,res) => {
     }
     catch (error){
         res.send(false);
-        throw error;
+        console.log(error);
     }
 })
 
 Route.patch('/open-fund/:id', async(req,res) => {
     try {
-        let user = await Users.findByIdAndUpdate(req.params.id, {$push : {funds : req.body}});
+        let user = await Users.findById(req.params.id);
+        await user.funds.push(req.body);
+        if(req.body.movements.length > 0){
+            let b = req.body.movements[0];
+            b.value = encrypt(eval(decrypt(b.value)) * -1);
+            await user.funds[0].movements.push(b);
+        }
+        user.save();
         res.send(true);
     } catch (error) {
         res.send(false);
-        throw error;
+        console.log(error);
+    }
+})
+
+Route.patch('/push-movement/:id/?', async(req,res) => {
+    try {
+        let funds = (await Users.findOneAndUpdate({_id :req.params.id , "funds._id" : req.query.fund },{$push : { "funds.$.movements" : req.body}})).funds;
+        res.send(true);
+    } catch (error) {
+        res.send(false);
+        console.log(error);
+    }
+})
+
+Route.delete('/delete-movement/:id/?', async(req,res) => {
+    try {
+        let user = (await Users.findOneAndUpdate({_id :req.params.id , "funds.movements._id" : req.query.mov },{$pull : { "funds.$.movements" : {_id :req.query.mov}}}));
+        res.send(true);
+    } catch (error) {
+        res.send(false);
+        console.log(error);
     }
 })
 
 Route.get('/open-connect/?', async(req,res) => {
     try{
         let b = (await Users.findOne({spec : req.query.spec})).logs;
-        b.push({open : (new Date(Date.now())).getTime() , close : null});
+        b.push({open : new Date(Date.now()) , close : null});
         await Users.findOneAndUpdate(req.query,{'$set' : {logs : b}});
         res.send(await Users.findOne(req.query));
     }
     catch (error){
         res.send(false);
-        throw error;
+        console.log(error);
     }
 })
 
 Route.get('/close-connect/:id', async(req,res) => {
     try{
         let b = (await Users.findById(req.params.id)).logs;
-        b[b.length - 1].close = (new Date(Date.now())).getTime();
+        b[b.length - 1].close = new Date(Date.now());
         await Users.findOneAndUpdate(req.query,{'$set' : {logs : b}});
         res.send(await Users.findById(req.params.id));
     }
     catch (error){
         res.send(false);
+        console.log(error);
     }
 })
 

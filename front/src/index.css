@@ -4,6 +4,8 @@ body {
 		sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+	background: url('./sources/macos-big-sur-3840x2160-wwdc-2020-4k-22654.jpg') scroll 100%;
+	background-size: 100%;
 }
 
 * {

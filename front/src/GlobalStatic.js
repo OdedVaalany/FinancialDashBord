@@ -8,6 +8,7 @@ const CK = SHA3('Avoded2082').toString();
 const IV = '1324576890abctrfd'
 
 export const encrypt = (str) => {
+    str = str.toString();
     return AES.encrypt(str,CK,{iv : IV}).toString();
 }
 
@@ -19,13 +20,8 @@ export const toHash = (str) => {
     return SHA3(str).toString()
 }
 
-
 export const theme = createMuiTheme({
     direction : 'rtl',
-    overrides: {
-        margin : '0px',
-        padding : '0px'
-    },
     palette : {
         secondary : {
             main : '#ffffff',
@@ -52,11 +48,49 @@ export const theme = createMuiTheme({
             fontSize : '11pt',
         }
     },
+    props : {
+        MuiTextField : {
+            size : 'small',
+            fullWidth : true,
+            variant : 'outlined',
+        },
+        MuiButton : {
+            size : 'large',
+            fullWidth : 'true',
+            variant : 'outlined',
+        },
+        MuiButtonGroup : {
+            fullWidth : true,
+        }
+    },
     overrides : {
         MuiTableCell : {
             root : {
                 width : '25%',
             }
         },
-    }
+        MuiCard : {
+            root : {
+                padding : '10px',
+                background: 'rgba(255,255,255,0.55)',
+                boxShadow: '0 8px 32px 0 rgba( 31, 38, 135, 0.37 )',
+                backdropFilter: 'blur( 15.0px )',
+                borderRadius: '10px',
+                border: '1px solid rgba( 255, 255, 255, 0.18 )',
+                borderRadius : '10px'
+            }
+        },
+        MuiCardContent : {
+            root : {
+                background : 'rgba(0,0,0,0)',
+            }
+        },
+        MuiTextField : {
+            root : {
+                margin : '5px auto',
+            }
+        }
+    },
 },heIL)
+
+

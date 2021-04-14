@@ -30,7 +30,7 @@ export default function SignUp(props) {
                 spec : toHash(Password + Email),
                 first_name : encrypt(FirstName),
                 last_name : encrypt(LastName),
-                birthday : encrypt(Birthday.toString()),
+                birthday : Birthday,
                 gender : encrypt(Gender),
                 email : encrypt(Email),
                 password : toHash(Password),
@@ -40,6 +40,15 @@ export default function SignUp(props) {
                 },
                 status : encrypt("active"),
                 client : encrypt("private"),
+                funds : [{
+                    kind : encrypt('genral'),
+                    name : encrypt('genral'),
+                    movements : [],
+                    open : (new Date(Date.now())),
+                    active : toHash(true),
+                    growth : encrypt(0),
+                    periods : encrypt(12),
+                }],
                 version : 1,
                 admin : false,
             });
@@ -92,7 +101,7 @@ export default function SignUp(props) {
                         </ButtonGroup>
                     </Grid>
                     <Grid item xs={12}>
-                        <TextField variant={inputsStyle} size='small' label='כתובת דואר אלקטרוני' placeholder='exemple@host.co.il' fullWidth required
+                        <TextField variant={inputsStyle} type='email' size='small' label='כתובת דואר אלקטרוני' placeholder='exemple@host.co.il' fullWidth required
                         inputProps={{pattern : '[A-Za-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$'}}
                         onChange={e => setEmail(e.target.validity.valid ? e.target.value.toLowerCase() : false)}
                         onBlur ={VerifyEmail()}
@@ -118,7 +127,7 @@ export default function SignUp(props) {
                     </Grid>
                     <Grid item sm={6} xs={12}>
                         <TextField variant={inputsStyle} size='small' type='date' label='תאריך יום הולדת'   fullWidth required InputLabelProps={{shrink : true}} 
-                        onChange={e => setBirthday(e.target.validity.valid ? e.target.valueAsNumber : null)}
+                        onChange={e => setBirthday(e.target.validity.valid ? e.target.valueAsDate : null)}
                         />
                     </Grid>
                     <Grid item xs={12}>
