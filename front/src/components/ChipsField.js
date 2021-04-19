@@ -2,7 +2,7 @@ import { Box, Chip, TextField } from '@material-ui/core'
 import React, { useState } from 'react'
 
 export default function ChipsField(props) {
-    const [Tags, setTag] = useState([]);
+    const [Tags, setTag] = useState(props.tags || []);
     const {setTags} = props.update;
     return (
             <Box>
@@ -11,6 +11,7 @@ export default function ChipsField(props) {
                 onKeyPress={e => {
                     if((e.key === ' ' || e.key === 'Enter') && e.target.value !== '' && e.target.value.indexOf(' ',0) === -1){
                         let b = [...Tags];
+                        b = b.filter(ll => ll !== e.target.value);
                         b.push(e.target.value);
                         setTag(b);
                         setTags(b);

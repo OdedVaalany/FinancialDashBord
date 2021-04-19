@@ -1,15 +1,18 @@
-import { Card, CardContent, CardHeader, makeStyles, Paper, Select, ThemeProvider, Typography, useTheme } from '@material-ui/core'
+import { Card, CardContent, CardHeader, Collapse, IconButton, makeStyles, Paper, Select, ThemeProvider, Typography, useTheme } from '@material-ui/core'
 import { Skeleton } from '@material-ui/lab'
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { decrypt, theme } from '../GlobalStatic'
+import { decrypt, shortNum, theme } from '../GlobalStatic'
 import { FundContext } from './Dashbord';
 import { UserContext } from './Father';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 
 export default function Overview() {
     const classes = useStyle(theme);
     const {Fund,setFund} = useContext(FundContext);
     const {UserData,setUserData} = useContext(UserContext);
     const [data,setData] = useState([]);
+    const [wide,setWide] = useState(true);
 
     useEffect(() => {
         load_data();
@@ -53,32 +56,32 @@ export default function Overview() {
                     })
                 })
             }
-            a.push({title : 'מאזן כללי',value : sum1});
-            a.push({title : 'כל ההוצאות',value : sum2});
-            a.push({title : 'כל ההכנסות',value : sum3});
-            a.push({title : 'מאזן בשלושים הימים האחרונים',value : sum4});
-            a.push({title : 'הוצאות בשלושים הימים האחרונים',value : sum5});
-            a.push({title : 'הכנסות בשלושים הימים האחרונים',value : sum6});
-            a.push({title : 'מאזן בשנה האחרונה',value : sum7});
-            a.push({title : 'הוצאות בשנה האחרונה',value : sum8});
-            a.push({title : 'הכנסות בשנה האחרונה',value : sum9});
+            a.push({title : 'מאזן כללי',value : shortNum(sum1)});
+            a.push({title : 'כל ההוצאות',value : shortNum(sum2)});
+            a.push({title : 'כל ההכנסות',value : shortNum(sum3)});
+            a.push({title : 'מאזן בשלושים הימים האחרונים',value : shortNum(sum4)});
+            a.push({title : 'הוצאות בשלושים הימים האחרונים',value : shortNum(sum5)});
+            a.push({title : 'הכנסות בשלושים הימים האחרונים',value : shortNum(sum6)});
+            a.push({title : 'מאזן בשנה האחרונה',value : shortNum(sum7)});
+            a.push({title : 'הוצאות בשנה האחרונה',value : shortNum(sum8)});
+            a.push({title : 'הכנסות בשנה האחרונה',value : shortNum(sum9)});
             setData(a);
         }
     }
 
     return (
         <Card variant='outlined'>
-            <CardHeader title='מבט כללי'/>
-            <CardContent className={classes.overview_container}>
-                {data.map(e => (<Paper variant='outlined' key={Math.random()} className={classes.overview_block}>
-                                <Typography variant='h3' align='center'>
-                                    {e.title}
-                                </Typography>
-                                <Typography variant='body1' align='center' style={{direction : 'ltr'}}>
-                                    {e.value}
-                                </Typography>
-                </Paper>))}
-            </CardContent>
+            <CardHeader title='מבט כללי' action={<IconButton onClick={e => setWide(!wide)}>{wide ? <ArrowDropUpIcon/> : <ArrowDropDownIcon/>}</IconButton>}/>
+            <Collapse in={wide}>
+                <CardContent className={classes.overview_container}>
+                    {
+                        data.map(item => (<Paper variant='outlined' className={classes.overview_block}>
+                            <Typography variant='body2' align='center'>{item.title}</Typography>
+                            <Typography variant='body1' style={{direction : 'ltr', textAlign : 'center'}}>{item.value}</Typography>
+                        </Paper>))
+                    }
+                </CardContent>
+            </Collapse>
         </Card>
     )
 }
@@ -101,7 +104,7 @@ export function OverviewSkeleton() {
 const useStyle = makeStyles(theme => ({
     overview_block : {
         padding : '5px',
-        width : '100%',
+        width : '250px',
         height : '75px',
         display : 'flex',
         flexDirection : 'column',
@@ -111,9 +114,8 @@ const useStyle = makeStyles(theme => ({
     overview_container : {
         overflow : 'scroll',
         padding : '10px',
-        display : 'grid',
-        gridTemplateColumns : '1fr 1fr 1fr',
-        gridGap : '10px',
+        display : 'flex',
+        gridGap : '2px',
     },
     card : {
     }

@@ -7,6 +7,10 @@ export const ServerURL = "http://127.0.0.1:5000/";
 const CK = SHA3('Avoded2082').toString();
 const IV = '1324576890abctrfd'
 
+export const shortNum = (num) => {
+    return (parseInt(num* 100)/100.0)
+}
+
 export const encrypt = (str) => {
     str = str.toString();
     return AES.encrypt(str,CK,{iv : IV}).toString();
@@ -23,8 +27,11 @@ export const toHash = (str) => {
 export const theme = createMuiTheme({
     direction : 'rtl',
     palette : {
+        primary : {
+            main : '#003049',
+        },
         secondary : {
-            main : '#ffffff',
+            main : '#EAE2B7',
         }
     },
     typography:{
@@ -46,6 +53,7 @@ export const theme = createMuiTheme({
         },
         body2 : {
             fontSize : '11pt',
+            alignSelf : 'center'
         }
     },
     props : {
@@ -61,6 +69,9 @@ export const theme = createMuiTheme({
         },
         MuiButtonGroup : {
             fullWidth : true,
+        },
+        MuiChip : {
+            size : 'small',
         }
     },
     overrides : {
@@ -88,6 +99,11 @@ export const theme = createMuiTheme({
         MuiTextField : {
             root : {
                 margin : '5px auto',
+            }
+        },
+        MuiChip : {
+            root : {
+                margin : 'auto 3px',
             }
         }
     },

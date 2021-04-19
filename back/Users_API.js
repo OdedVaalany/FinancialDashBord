@@ -62,6 +62,37 @@ Route.patch('/push-movement/:id/?', async(req,res) => {
     }
 })
 
+Route.patch('/delete-all-movements/:id', async(req,res) => {
+    try {
+        let funds = (await Users.findByIdAndUpdate(req.params.id,{$set : {'funds.$[].movements' : []}}));
+        res.send(true);
+    } catch (error) {
+        res.send(false);
+        console.log(error);
+    }
+})
+
+Route.patch('/edit-movement/:id/?', async(req,res) => {
+    try {
+        let mov = (await Users.findOneAndUpdate({_id :req.params.id , "funds.movements._id" : req.query.mov },{$push : { "funds.$.movements" : req.body}}));
+        mov = (await Users.findOneAndUpdate({_id :req.params.id , "funds.movements._id" : req.query.mov },{$pull : {'funds.$.movements' : {_id : req.query.mov}}}));
+        res.send(true);
+    } catch (error) {
+        res.send(false);
+        console.log(error);
+    }
+})
+
+
+Route.delete('/delete-movement/:id/?', async(req,res) => {
+    try {
+        let user = (await Users.findOneAndUpdate({_id :req.params.id , "funds.movements._id" : req.query.mov },{$pull : { "funds.$.movements" : {_id :req.query.mov}}}));
+        res.send(true);
+    } catch (error) {
+        res.send(false);
+        console.log(error);
+    }
+})
 Route.delete('/delete-movement/:id/?', async(req,res) => {
     try {
         let user = (await Users.findOneAndUpdate({_id :req.params.id , "funds.movements._id" : req.query.mov },{$pull : { "funds.$.movements" : {_id :req.query.mov}}}));

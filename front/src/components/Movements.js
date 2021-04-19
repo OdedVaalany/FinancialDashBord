@@ -4,6 +4,7 @@ import { decrypt, theme } from '../GlobalStatic';
 import { FundContext } from './Dashbord'
 import { UserContext } from './Father';
 import MovementItem from './MovementItem';
+import MovementMonthHeader from './MovementMonthHeader';
 
 export default function Movements() {
     const classes = useStyle(theme);
@@ -59,7 +60,6 @@ export default function Movements() {
         return -1; 
     }
     const load = () => {
-        console.log("hello");
         let m = [];
         let d = [];
         UserData.funds.forEach(fnd => {
@@ -80,7 +80,6 @@ export default function Movements() {
                 d[ans].body.push(e);
             }
         })
-        console.log(d);
         d = d.sort((a,b) => ( (new Date(b.head)).getTime() - new Date(a.head).getTime()))
         setMovements(d);
     }
@@ -94,24 +93,7 @@ export default function Movements() {
             <CardContent>
                 {
                     movements.map(data => (
-                        <Accordion>
-                            <AccordionSummary>
-                                <Typography variant='body1'>{`${month_in_word(new Date(data.head).getMonth())} ${(new Date(data.head)).getFullYear() === (new Date()).getFullYear() ? '' : (new Date(data.head)).getFullYear()}`}</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails className={classes.cont}>
-                                {
-                                    data.body.map(e=> {
-                                        let edate = new Date(e.date);
-                                        let head = new Date(data.head);
-                                        if(edate.getMonth() === head.getMonth() && edate.getFullYear() === head.getFullYear()){
-                                            return(
-                                                <MovementItem data={e}/>
-                                            )
-                                        }
-                                    })
-                                }
-                            </AccordionDetails>
-                        </Accordion>
+                        <MovementMonthHeader data={data}/>
                     ))
                 }
             </CardContent>
